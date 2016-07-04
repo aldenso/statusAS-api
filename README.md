@@ -1,7 +1,7 @@
 statusAS-api
 ============
 
-Minimalistic API to monitor the status of your services.
+Minimalist API to monitor the status of your services.
 
 You need a MongoDB database, with a DB named "statusAS" and a collection named "services", anyway you can change whatever you like in the configuration.
 
@@ -72,4 +72,4 @@ type Service struct {
 
 Status codes should be 0 ("OPERATIONAL") or 1 (NOT OPERATIONAL).
 
-TODO: add TLS and a Token for POST, PUT and DELETE.
+TODO: add TLS and a Token for POST, PUT and DELETE plus some other improvements.
