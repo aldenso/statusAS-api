@@ -70,4 +70,6 @@ type Service struct {
 }
 ```
 
+Status codes should be 0 ("OPERATIONAL") or 1 (NOT OPERATIONAL).
+
 TODO: add TLS and a Token for POST, PUT and DELETE.
