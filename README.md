@@ -55,4 +55,19 @@ Content-Type: application/json; charset=utf-8
 Date: Mon, 04 Jul 2016 02:45:29 GMT
 ```
 
+Models:
+```go
+type Service struct {
+	ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	Name        string        `bson:"name" json:"name"`
+	Description string        `bson:"description" json:"description"`
+	Link        string        `bson:"link" json:"link"`
+	Status      int           `bson:"status" json:"status"`
+	GroupID     int           `bson:"group_id" json:"group_id"`
+	Messages    []string      `bson:"messages" json:"messages"`
+	CreatedAt   time.Time     `bson:"created_at" json:"created_at"`
+	UpdatedAt   time.Time     `bson:"updated_at" json:"updated_at"`
+}
+```
+
 TODO: add TLS and a Token for POST, PUT and DELETE.
