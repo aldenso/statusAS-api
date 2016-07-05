@@ -3,11 +3,13 @@
 * @Date:   2016-07-03T19:42:40-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-03T20:35:48-04:30
+* @Last modified time: 2016-07-04T19:44:11-04:30
  */
 package main
 
 import (
+	"fmt"
+	"os"
 	"time"
 
 	"gopkg.in/mgo.v2/bson"
@@ -24,4 +26,48 @@ type Service struct {
 	Messages    []string      `bson:"messages" json:"messages"`
 	CreatedAt   time.Time     `bson:"created_at" json:"created_at"`
 	UpdatedAt   time.Time     `bson:"updated_at" json:"updated_at"`
+}
+
+// Tomlconfig struct to read toml file components.
+type Tomlconfig struct {
+	APIServer APIServerinfo
+}
+
+// APIServerinfo struct to configure statusAS-api
+type APIServerinfo struct {
+	Name string
+	Port int
+}
+
+// CreateTemplate function to create a base config.toml file
+func CreateTemplate() {
+	template := `# Example of config Configuration
+[frontserver]
+name = "server2.mydom.local"
+port = 9000
+
+[apiserver]
+name = "server1.mydom.local"
+port = 8080
+`
+	tomlfile := "config.toml"
+	if _, err := os.Stat(tomlfile); err != nil {
+		if os.IsNotExist(err) {
+			file, err := os.Create(tomlfile)
+			if err != nil {
+				fmt.Println("Error creating config.toml file", err)
+				os.Exit(1)
+			}
+			defer file.Close()
+			if _, err := file.Write([]byte(template)); err != nil {
+				fmt.Printf("Can't write message\n%v\n", err)
+				os.Exit(1)
+			}
+		}
+	} else {
+		fmt.Println("config.toml already exist in directory.")
+		os.Exit(1)
+	}
+	fmt.Println("config.toml created.")
+	os.Exit(0)
 }

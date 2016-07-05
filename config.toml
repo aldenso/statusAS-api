@@ -1,0 +1,4 @@
+# Example of config Configuration
+[apiserver]
+name = "server1.mydom.local"
+port = 8080

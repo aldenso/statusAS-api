@@ -5,6 +5,14 @@ Minimalist API to monitor the status of your services.
 
 You need a MongoDB database, with a DB named "statusAS" and a collection named "services", anyway you can change whatever you like in the configuration.
 
+Config file (config.toml):
+```toml
+# Example of config Configuration
+[apiserver]
+name = "server1.mydom.local"
+port = 8080
+```
+
 Create a Service:
 ```
 $ curl -i -X POST http://192.168.125.1:8080/api/v1/services -d '{"name": "service X", "description": "service X description", "link": "https://serviceX.yourcom.com", "status": 0, "group_id": 0, "messages": []}'
