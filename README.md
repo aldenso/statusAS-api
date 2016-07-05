@@ -11,6 +11,8 @@ Config file (config.toml):
 [apiserver]
 name = "server1.mydom.local"
 port = 8080
+mongoserver = "serverdb.mydom.local"
+mongoport = 27017
 ```
 
 In case you delete or lose the config file you can generate another from a template.

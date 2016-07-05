@@ -27,15 +27,22 @@ func readTomlFile(tomlfile string) (*models.Tomlconfig, error) {
 
 // NewConnection create connection to DB
 func NewConnection() *mgo.Session {
-	config, err := readTomlFile(tomlfile)
-	if err != nil {
-		fmt.Println(err)
+	config, tomlerr := readTomlFile(tomlfile)
+	if tomlerr != nil {
+		fmt.Println(tomlerr)
 		os.Exit(1)
 	}
 	mongoserver = config.APIServer.MongoServer
 	mongoport = config.APIServer.MongoPort
+	if mongoport == 0 { //not defined in file
+		session, err := mgo.Dial(mongoserver)
+		if err != nil {
+			panic(err)
+		}
+		session.SetMode(mgo.Monotonic, true)
+		return session
+	}
 	session, err := mgo.Dial(mongoserver + ":" + strconv.Itoa(mongoport))
-	//session, err := mgo.Dial("172.17.0.1")
 	if err != nil {
 		panic(err)
 	}
