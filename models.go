@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:42:40-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-04T19:44:11-04:30
+* @Last modified time: 2016-07-04T20:13:50-04:30
  */
 package main
 
@@ -42,10 +42,6 @@ type APIServerinfo struct {
 // CreateTemplate function to create a base config.toml file
 func CreateTemplate() {
 	template := `# Example of config Configuration
-[frontserver]
-name = "server2.mydom.local"
-port = 9000
-
 [apiserver]
 name = "server1.mydom.local"
 port = 8080
