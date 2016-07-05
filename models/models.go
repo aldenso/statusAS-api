@@ -1,11 +1,5 @@
-/**
-* @Author: Aldo Sotolongo
-* @Date:   2016-07-03T19:42:40-04:30
-* @Email:  aldenso@gmail.com
-* @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-04T20:13:50-04:30
- */
-package main
+//Package models for mongo struct and toml file
+package models
 
 import (
 	"fmt"
@@ -35,8 +29,10 @@ type Tomlconfig struct {
 
 // APIServerinfo struct to configure statusAS-api
 type APIServerinfo struct {
-	Name string
-	Port int
+	Name        string
+	Port        int
+	MongoServer string
+	MongoPort   int
 }
 
 // CreateTemplate function to create a base config.toml file
@@ -45,6 +41,8 @@ func CreateTemplate() {
 [apiserver]
 name = "server1.mydom.local"
 port = 8080
+mongoserver = "serverdb.mydom.local"
+mongoport = 27017
 `
 	tomlfile := "config.toml"
 	if _, err := os.Stat(tomlfile); err != nil {

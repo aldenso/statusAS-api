@@ -2,3 +2,5 @@
 [apiserver]
 name = "server1.mydom.local"
 port = 8080
+mongoserver = "serverdb.mydom.local"
+mongoport = 27017

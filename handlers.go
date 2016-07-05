@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:43:02-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-03T22:20:52-04:30
+* @Last modified time: 2016-07-05T13:08:07-04:30
  */
 package main
 
@@ -12,14 +12,20 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/aldenso/statusAS-api/db"
+	"github.com/aldenso/statusAS-api/models"
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2/bson"
 )
 
-//Session Establish the main session, this comes from db.go
-var Session = NewConnection()
-
-var null = "null"
+var (
+	//Session Establish the main session, this comes from db.go
+	Session = db.NewConnection()
+	// DBNAME mongodb database name
+	DBNAME = "statusAS"
+	// SERVICES mongodb collection for services
+	SERVICES = "services"
+)
 
 //JSONResponse function to help in responses
 func JSONResponse(w http.ResponseWriter, r *http.Request, response []byte, code int) {
@@ -44,7 +50,7 @@ func JSONError(w http.ResponseWriter, r *http.Request, message string, code int)
 
 //GetServices handler to route services
 func GetServices(w http.ResponseWriter, r *http.Request) {
-	var services []Service
+	var services []models.Service
 	session := Session.Copy()
 	defer session.Close()
 	collection := session.DB(DBNAME).C(SERVICES)
@@ -58,7 +64,7 @@ func GetServices(w http.ResponseWriter, r *http.Request) {
 
 // AddService handler to add new service
 func AddService(w http.ResponseWriter, r *http.Request) {
-	var service Service
+	var service models.Service
 	json.NewDecoder(r.Body).Decode(&service)
 	if service.Name == "" || service.Description == "" {
 		JSONError(w, r, "Incorrect body", http.StatusBadRequest)
@@ -82,7 +88,7 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 
 //UpdateService handler to update a service
 func UpdateService(w http.ResponseWriter, r *http.Request) {
-	var service Service
+	var service models.Service
 	vars := mux.Vars(r)
 	if bson.IsObjectIdHex(vars["serviceID"]) != true {
 		JSONError(w, r, "bad entry for id", http.StatusBadRequest)

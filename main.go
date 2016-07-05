@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:42:40-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-04T20:03:01-04:30
+* @Last modified time: 2016-07-05T13:07:17-04:30
  */
 package main
 
@@ -16,15 +16,13 @@ import (
 	"strconv"
 
 	"github.com/BurntSushi/toml"
+	"github.com/aldenso/statusAS-api/models"
 	"github.com/gorilla/handlers"
 )
 
 var (
-	tomlfile = "config.toml"
-	template bool
-)
-
-var (
+	tomlfile      = "config.toml"
+	template      bool
 	apiservername string
 	apiserverport int
 )
@@ -33,8 +31,8 @@ func init() {
 	flag.BoolVar(&template, "template", false, "Create an example config.toml file")
 }
 
-func readTomlFile(tomlfile string) (*Tomlconfig, error) {
-	var config *Tomlconfig
+func readTomlFile(tomlfile string) (*models.Tomlconfig, error) {
+	var config *models.Tomlconfig
 	if _, err := toml.DecodeFile(tomlfile, &config); err != nil {
 		return nil, err
 	}
@@ -44,7 +42,7 @@ func readTomlFile(tomlfile string) (*Tomlconfig, error) {
 func main() {
 	flag.Parse()
 	if template {
-		CreateTemplate()
+		models.CreateTemplate()
 	}
 	config, err := readTomlFile(tomlfile)
 	if err != nil {
@@ -55,7 +53,7 @@ func main() {
 	apiserverport = config.APIServer.Port
 
 	router := NewRouter() // this func is in router.go
-	defer Session.Close() // related to Session in handlers.go
+	defer Session.Close()
 
 	loggedRouter := handlers.LoggingHandler(os.Stdout, router)
 	log.Fatal(http.ListenAndServe(apiservername+":"+strconv.Itoa(apiserverport), handlers.CORS()(loggedRouter)))
