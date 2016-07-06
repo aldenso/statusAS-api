@@ -1,6 +1,7 @@
-# Example of config Configuration
+# Example of Configuration
 [apiserver]
 name = "server1.mydom.local"
 port = 8080
+apitls = true
 mongoserver = "serverdb.mydom.local"
 mongoport = 27017

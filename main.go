@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:42:40-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-05T13:07:17-04:30
+* @Last modified time: 2016-07-06T15:12:24-04:30
  */
 package main
 
@@ -56,5 +56,11 @@ func main() {
 	defer Session.Close()
 
 	loggedRouter := handlers.LoggingHandler(os.Stdout, router)
-	log.Fatal(http.ListenAndServe(apiservername+":"+strconv.Itoa(apiserverport), handlers.CORS()(loggedRouter)))
+	if config.APIServer.Apitls {
+		log.Fatal(http.ListenAndServeTLS(apiservername+":"+strconv.Itoa(apiserverport),
+			"server.pem", "server.key", handlers.CORS()(loggedRouter)))
+	} else {
+		log.Fatal(http.ListenAndServe(apiservername+":"+strconv.Itoa(apiserverport),
+			handlers.CORS()(loggedRouter)))
+	}
 }

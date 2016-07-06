@@ -31,6 +31,7 @@ type Tomlconfig struct {
 type APIServerinfo struct {
 	Name        string
 	Port        int
+	Apitls      bool
 	MongoServer string
 	MongoPort   int
 }
@@ -41,6 +42,7 @@ func CreateTemplate() {
 [apiserver]
 name = "server1.mydom.local"
 port = 8080
+apitls = true
 mongoserver = "serverdb.mydom.local"
 mongoport = 27017
 `
