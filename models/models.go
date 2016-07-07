@@ -6,6 +6,8 @@ import (
 	"os"
 	"time"
 
+	"encoding/base64"
+
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -20,6 +22,11 @@ type Service struct {
 	Messages    []string      `bson:"messages" json:"messages"`
 	CreatedAt   time.Time     `bson:"created_at" json:"created_at"`
 	UpdatedAt   time.Time     `bson:"updated_at" json:"updated_at"`
+}
+
+// Token struct
+type Token struct {
+	Token base64.Encoding
 }
 
 // Tomlconfig struct to read toml file components.

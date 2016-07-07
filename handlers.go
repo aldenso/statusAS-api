@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:43:02-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-05T13:08:07-04:30
+* @Last modified time: 2016-07-06T19:27:04-04:30
  */
 package main
 
@@ -25,6 +25,8 @@ var (
 	DBNAME = "statusAS"
 	// SERVICES mongodb collection for services
 	SERVICES = "services"
+	//TOKENS mongodb tokens collection
+	TOKENS = "tokens"
 )
 
 //JSONResponse function to help in responses
@@ -48,6 +50,17 @@ func JSONError(w http.ResponseWriter, r *http.Request, message string, code int)
 	w.Write(response)
 }
 
+// CheckToken function to test auth
+func CheckToken(w http.ResponseWriter, r *http.Request) error {
+	var token models.Token
+	tokenheader := r.Header.Get("X-StatusAS-Token")
+	sessionToken := Session.Copy()
+	defer sessionToken.Close()
+	collectiontoken := sessionToken.DB(DBNAME).C(TOKENS)
+	err := collectiontoken.Find(bson.M{"token": tokenheader}).One(&token)
+	return err
+}
+
 //GetServices handler to route services
 func GetServices(w http.ResponseWriter, r *http.Request) {
 	var services []models.Service
@@ -64,6 +77,11 @@ func GetServices(w http.ResponseWriter, r *http.Request) {
 
 // AddService handler to add new service
 func AddService(w http.ResponseWriter, r *http.Request) {
+	tokenerr := CheckToken(w, r)
+	if tokenerr != nil {
+		JSONError(w, r, "Token not authorized", http.StatusForbidden)
+		return
+	}
 	var service models.Service
 	json.NewDecoder(r.Body).Decode(&service)
 	if service.Name == "" || service.Description == "" {
@@ -88,6 +106,11 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 
 //UpdateService handler to update a service
 func UpdateService(w http.ResponseWriter, r *http.Request) {
+	tokenerr := CheckToken(w, r)
+	if tokenerr != nil {
+		JSONError(w, r, "Token not authorized", http.StatusForbidden)
+		return
+	}
 	var service models.Service
 	vars := mux.Vars(r)
 	if bson.IsObjectIdHex(vars["serviceID"]) != true {
@@ -115,6 +138,11 @@ func UpdateService(w http.ResponseWriter, r *http.Request) {
 
 //DeleteService handler to delete a todo
 func DeleteService(w http.ResponseWriter, r *http.Request) {
+	tokenerr := CheckToken(w, r)
+	if tokenerr != nil {
+		JSONError(w, r, "Token not authorized", http.StatusForbidden)
+		return
+	}
 	vars := mux.Vars(r)
 	serviceID := bson.ObjectIdHex(vars["serviceID"])
 	session := Session.Copy()
