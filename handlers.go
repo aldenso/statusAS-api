@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:43:02-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-06T22:00:55-04:30
+* @Last modified time: 2016-07-07T09:57:00-04:30
  */
 package main
 
@@ -108,7 +108,7 @@ func AddService(w http.ResponseWriter, r *http.Request) {
 	}
 	var service models.Service
 	json.NewDecoder(r.Body).Decode(&service)
-	if service.Name == "" || service.Description == "" {
+	if service.Name == "" || service.Description == "" || service.Status > 2 {
 		JSONError(w, r, "Incorrect body", http.StatusBadRequest)
 		return
 	}
@@ -142,7 +142,7 @@ func UpdateService(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	json.NewDecoder(r.Body).Decode(&service)
-	if service.Name == "" || service.Description == "" {
+	if service.Name == "" || service.Description == "" || service.Status > 2 {
 		JSONError(w, r, "Incorrect body", http.StatusBadRequest)
 		return
 	}

@@ -123,4 +123,4 @@ type Service struct {
 }
 ```
 
-Status codes should be 0 ("OPERATIONAL") or 1 (NOT OPERATIONAL).
+Status codes should be 0 ("OPERATIONAL") or 1 (DEGRADED), 2 (NOT OPERATIONAL).
