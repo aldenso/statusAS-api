@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:43:02-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-06T19:27:04-04:30
+* @Last modified time: 2016-07-06T22:00:55-04:30
  */
 package main
 
@@ -69,6 +69,30 @@ func GetServices(w http.ResponseWriter, r *http.Request) {
 	collection := session.DB(DBNAME).C(SERVICES)
 	collection.Find(bson.M{}).All(&services)
 	response, err := json.MarshalIndent(services, "", "    ")
+	if err != nil {
+		panic(err)
+	}
+	JSONResponse(w, r, response, http.StatusOK)
+}
+
+//GetService handler to route services
+func GetService(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	if bson.IsObjectIdHex(vars["serviceID"]) != true {
+		JSONError(w, r, "bad entry for id", http.StatusBadRequest)
+		return
+	}
+	var service models.Service
+	serviceID := bson.ObjectIdHex(vars["serviceID"])
+	session := Session.Copy()
+	defer session.Close()
+	collection := session.DB(DBNAME).C(SERVICES)
+	collection.Find(bson.M{"_id": serviceID}).One(&service)
+	if service.ID == "" {
+		JSONError(w, r, "service not found", http.StatusNotFound)
+		return
+	}
+	response, err := json.MarshalIndent(service, "", "    ")
 	if err != nil {
 		panic(err)
 	}

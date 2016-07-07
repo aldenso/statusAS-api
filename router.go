@@ -3,7 +3,7 @@
 * @Date:   2016-07-03T19:42:53-04:30
 * @Email:  aldenso@gmail.com
 * @Last modified by:   Aldo Sotolongo
-* @Last modified time: 2016-07-03T20:39:18-04:30
+* @Last modified time: 2016-07-06T21:54:09-04:30
  */
 package main
 
@@ -30,6 +30,7 @@ func NotFound(w http.ResponseWriter, r *http.Request) {
 func NewRouter() *mux.Router {
 	r := mux.NewRouter().StrictSlash(false)
 	r.HandleFunc("/api/v1/services", GetServices).Methods("GET")
+	r.HandleFunc("/api/v1/services/{serviceID}", GetService).Methods("GET")
 	r.HandleFunc("/api/v1/services", AddService).Methods("POST")
 	r.HandleFunc("/api/v1/services/{serviceID}", UpdateService).Methods("PUT")
 	r.HandleFunc("/api/v1/services/{serviceID}", DeleteService).Methods("DELETE")
